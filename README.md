@@ -22,7 +22,7 @@ One-to-one static copy of the Wix site https://www.modelardata.com/ (ModelarData
 # once, in a scratch folder: npm i puppeteer-core   (uses the installed Chrome)
 node render.mjs https://www.modelardata.com/ <tmp> desktop
 node render.mjs https://www.modelardata.com/ <tmp> mobile
-python -I tools/wix_snapshot.py <tmp>/desktop_dom.html sites/modelardata/site index.html --origin https://www.modelardata.com \
+python -I tools/wix_snapshot.py <tmp>/desktop_dom.html sites/modelardata/site index.html --bg-width 2560 --origin https://www.modelardata.com \
   --anchors sites/modelardata/snapshot/anchors.json --extra-head sites/modelardata/snapshot/head.html --extra-body sites/modelardata/snapshot/body.html
 python -I tools/wix_snapshot.py <tmp>/mobile_dom.html  sites/modelardata/site mobile.html  (same options)
 ```
@@ -35,7 +35,7 @@ python -I tools/wix_snapshot.py <tmp>/mobile_dom.html  sites/modelardata/site mo
 4. **Mobile menu** (hamburger) and the **parallax background** of the desktop "Get Started" section are re-implemented in a few lines of plain JS (`snapshot/body.html`), matched to measurements of the live site.
 5. **Contact form.** The Wix form sent submissions to Wix. On the copy, "Submit" opens the visitor's e-mail program with a pre-filled message to hello@modelardata.com (required fields still enforced). `TODO(owner): decide on a real form backend (e.g. Azure Function + mail service) before DNS cutover, or keep the mailto behaviour.`
 6. **Fonts stay on Wix's CDN** (`static.parastorage.com`, allows cross-origin use). Helvetica, Avenir and DIN Next are Monotype fonts licensed for Wix sites, so they are not copied to our hosting. If the Wix subscription is cancelled the font licence question must be settled. `TODO(owner): replace with licensed or open fonts before or soon after cutover.`
-7. **Images** are copied from `static.wixstatic.com` in the exact sizes Wix served; pixel difference to the live site is 0.02 % (desktop) and 0.003 % (mobile), from image re-encoding.
+7. **Images** are copied from `static.wixstatic.com` in the exact sizes Wix served; pixel difference to the live site is 0.08 % (desktop) and 0.003 % (mobile), from image re-encoding. The two desktop **section backgrounds** (hero, "Get Started") are fetched 2560 px wide and fill the section at any window width, as Wix does with JS on resize (`--bg-width 2560`; checked equal to live at 1366, 1920 and 2560 px).
 8. Footer text "Powered and secured by Wix" and the Wix default favicon are kept (one-to-one). `TODO(owner): remove/replace at cutover?`
 9. `robots.txt` simplified (Wix-specific rules dropped); `sitemap.xml` lists the one page. Canonical URL stays `https://www.modelardata.com`.
 10. Security headers from `staticwebapp.config.json` (HSTS, nosniff, frame-options, referrer and permissions policy); unknown URLs redirect to `/`.
