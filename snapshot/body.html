@@ -1,0 +1,60 @@
+<!-- static copy: replaces the Wix runtime for the mobile menu and the contact form -->
+<script>
+(function () {
+  var menu = document.getElementById('MENU_AS_CONTAINER');
+  var toggle = document.getElementById('MENU_AS_CONTAINER_TOGGLE');
+  if (menu && toggle) {
+    var overlay = document.getElementById('overlay-MENU_AS_CONTAINER');
+    var inner = document.getElementById('container-MENU_AS_CONTAINER');
+    var setOpen = function (open) {
+      menu.setAttribute('data-undisplayed', open ? 'false' : 'true');
+      menu.classList.toggle('I_VSKP', open);
+      toggle.classList.toggle('d0L2ow', open);
+      toggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+      document.body.classList.toggle('siteScrollingBlockedIOSFix', open);
+      if (overlay) overlay.style.cssText = open ? 'opacity: 1; visibility: inherit;' : '';
+      if (inner) inner.style.cssText = open ? 'visibility: inherit;' : '';
+    };
+    toggle.addEventListener('click', function () { setOpen(menu.getAttribute('data-undisplayed') === 'true'); });
+    if (overlay) overlay.addEventListener('click', function () { setOpen(false); });
+    menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { setOpen(false); }); });
+  }
+
+  // Wix parallax background on the desktop "Get Started" section (measured on the live site:
+  // shift = 0.2 x section top, section top clamped to [-section height, viewport height])
+  var bgSection = document.getElementById('comp-lepnbd0c');
+  var bgMedia = document.getElementById('bgMedia_comp-lepnbd0c');
+  if (bgSection && bgMedia && !document.body.classList.contains('device-mobile-optimized')) {
+    var parallax = function () {
+      var r = bgSection.getBoundingClientRect();
+      var top = Math.max(-r.height, Math.min(window.innerHeight, r.top));
+      bgMedia.style.transform = 'translateY(' + (0.2 * top) + 'px)';
+    };
+    window.addEventListener('scroll', parallax, { passive: true });
+    window.addEventListener('resize', parallax);
+    parallax();
+  }
+
+  // The Wix form posted to Wix. Until a form backend exists on Azure, open the visitor's
+  // e-mail program with the message filled in, addressed to the address shown on the page.
+  var form = document.querySelector('form.wixui-form');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var v = function (sel) { var el = form.querySelector(sel); return el ? el.value.trim() : ''; };
+      var lines = [
+        'First name: ' + v('[name="first-name"]'),
+        'Last name: ' + v('[name="last-name"]'),
+        'Email: ' + v('[name="email"]'),
+        'Phone: ' + v('[name="phone"]'),
+        'Company: ' + v('[name="company"]'),
+        'Job title: ' + v('[name="job-title"]'),
+        '',
+        v('textarea')
+      ];
+      location.href = 'mailto:hello@modelardata.com?subject=' + encodeURIComponent('Contact form - modelardata.com') +
+        '&body=' + encodeURIComponent(lines.join('\n'));
+    });
+  }
+})();
+</script>

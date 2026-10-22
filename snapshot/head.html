@@ -1,0 +1,9 @@
+<!-- static copy: Wix serves a separate mobile layout by user agent; do the same here -->
+<script>
+(function () {
+  var mobile = /iPhone|iPod|Android.*Mobile|Windows Phone|BlackBerry|Mobi/i.test(navigator.userAgent);
+  var onMobilePage = /\/mobile(\.html)?$/.test(location.pathname);
+  if (mobile !== onMobilePage) location.replace((mobile ? '/mobile.html' : '/') + location.hash);
+})();
+</script>
+<style>html { scroll-behavior: smooth; }</style>
