@@ -1,0 +1,133 @@
+---
+// Blog article with the pitch deck's product detail (moved off the front page, owner feedback 2026-10-24).
+// Uses only shared theme tokens, so it renders in both the dark and the light style.
+import Layout from '../../../layouts/Layout.astro';
+import Icon from '../../../components/Icon.astro';
+import KeyIdea from '../../../components/KeyIdea.astro';
+import DeployModes from '../../../components/DeployModes.astro';
+import Benchmarks from '../../../components/Benchmarks.astro';
+import Enterprise from '../../../components/Enterprise.astro';
+import { article, benchmarks, company, deployModes, enterprise, keyIdea, mail } from '../../../content';
+
+const url = `${company.url}/blog/${article.slug}/`;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: article.title,
+  description: article.description,
+  datePublished: article.date,
+  url,
+  mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: company.name, url: `${company.url}/` },
+  publisher: { '@type': 'Organization', name: company.legalName, url: `${company.url}/` },
+};
+---
+
+<Layout title={`${article.title} | ${company.name}`} description={article.description} jsonLd={jsonLd}>
+  <article>
+    <header class="container head">
+      <a class="back" href="/blog/"><Icon name="arrow-left" size={16} />Blog</a>
+      <span class="kicker">{article.dateLabel}</span>
+      <h1>{article.title}</h1>
+      <p class="lead">{article.intro}</p>
+    </header>
+
+    <section class="block" aria-labelledby="key-idea">
+      <div class="container">
+        <h2 id="key-idea">{keyIdea.h2}</h2>
+        <p class="lead">{keyIdea.sub}</p>
+        <KeyIdea />
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="deploy">
+      <div class="container">
+        <h2 id="deploy">{deployModes.h2}</h2>
+        <p class="lead">{deployModes.sub}</p>
+        <DeployModes />
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="benchmarks">
+      <div class="container">
+        <h2 id="benchmarks">{benchmarks.h2}</h2>
+        <Benchmarks />
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="enterprise">
+      <div class="container">
+        <h2 id="enterprise">{enterprise.h2}</h2>
+        <p class="lead">{enterprise.sub}</p>
+        <Enterprise />
+      </div>
+    </section>
+
+    <footer class="container end">
+      <p>Want to see ModelarDB on your sensor data, or try the open-source core?</p>
+      <div class="actions">
+        <a class="btn btn--primary" href={mail.demo}><Icon name="mail" size={18} />Get a demo</a>
+        <a class="btn btn--ghost" href={company.github} rel="noopener"><Icon name="git-branch" size={18} />GitHub</a>
+      </div>
+    </footer>
+  </article>
+</Layout>
+
+<style>
+  .head {
+    padding-top: clamp(48px, 7vw, 88px);
+    padding-bottom: 8px;
+  }
+  .head h1 {
+    max-width: 22ch;
+  }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 28px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .back:hover {
+    color: var(--accent);
+  }
+  .head .kicker {
+    display: flex;
+  }
+  h1 {
+    font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+    color: var(--heading);
+  }
+  .head .lead {
+    font-size: 1.2rem;
+  }
+  .block {
+    padding-top: clamp(48px, 7vw, 80px);
+  }
+  .block h2 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    color: var(--heading);
+  }
+  .block .lead {
+    margin-bottom: 28px;
+  }
+  .end {
+    padding-block: clamp(56px, 8vw, 96px);
+    text-align: center;
+  }
+  .end p {
+    font-size: 1.15rem;
+    color: var(--heading);
+    font-weight: 600;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+  }
+</style>

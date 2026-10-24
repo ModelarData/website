@@ -17,7 +17,7 @@ import { company, mail, nav } from '../content';
 
     <nav id="nav" class="nav" aria-label="Main menu">
       <ul>
-        {nav.map((n) => <li><a href={`/${n.href}`}>{n.label}</a></li>)}
+        {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
       </ul>
       <div class="actions">
         <a class="gh" href={company.github} rel="noopener">

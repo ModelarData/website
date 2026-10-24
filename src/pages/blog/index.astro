@@ -1,0 +1,88 @@
+---
+// Blog index. One article for now.
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import { article, company } from '../../content';
+
+const posts = [article];
+---
+
+<Layout
+  title={`Blog | ${company.name}`}
+  description="Articles about ModelarDB, model-based compression and high-frequency time-series data."
+>
+  <div class="container wrap">
+    <span class="kicker">Blog</span>
+    <h1>Blog</h1>
+    <ul class="posts">
+      {
+        posts.map((p) => (
+          <li>
+            <a href={`/blog/${p.slug}/`}>
+              <time datetime={p.date}>{p.dateLabel}</time>
+              <strong>{p.title}</strong>
+              <span class="desc">{p.description}</span>
+              <span class="more">
+                Read the article
+                <Icon name="arrow-right" size={16} />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Layout>
+
+<style>
+  .wrap {
+    padding-block: clamp(48px, 7vw, 96px);
+  }
+  .posts {
+    max-width: 860px;
+  }
+  h1 {
+    color: var(--heading);
+  }
+  .posts {
+    list-style: none;
+    margin: 32px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 16px;
+  }
+  .posts a {
+    display: grid;
+    gap: 8px;
+    padding: clamp(22px, 4vw, 32px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--card-bg);
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color 0.2s;
+  }
+  .posts a:hover {
+    border-color: var(--accent);
+  }
+  time {
+    font: 0.8rem var(--mono);
+    color: var(--muted);
+  }
+  strong {
+    font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--heading);
+  }
+  .desc {
+    color: var(--muted);
+  }
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+</style>
