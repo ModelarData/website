@@ -1,0 +1,57 @@
+---
+import Logo from './Logo.astro';
+import { company, mail } from '../content';
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container row">
+    <p class="brand"><Logo size={26} /><span>{company.name}</span></p>
+    <p>
+      © {company.since}–<span data-year>{year}</span>
+      {company.legalName} · Denmark
+    </p>
+    <p class="links">
+      <a href={mail.contact}>{company.email}</a>
+      <a href={company.github} rel="noopener">GitHub</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+  // Keeps the copyright year current even when the site has not been rebuilt this year.
+  document.querySelectorAll('[data-year]').forEach((el) => (el.textContent = String(new Date().getFullYear())));
+</script>
+
+<style>
+  .footer {
+    background: var(--deep);
+    color: #c9cff5;
+    padding-block: 28px;
+    font-size: 0.92rem;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 32px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  p {
+    margin: 0;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-weight: 700;
+  }
+  .links {
+    display: flex;
+    gap: 20px;
+  }
+  a {
+    color: #fff;
+  }
+</style>
