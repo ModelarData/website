@@ -21,6 +21,16 @@
   --sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Code', Consolas, monospace;
   --shine: linear-gradient(100deg, #ffffff 0%, #c7cfff 30%, #7ee0ff 55%, #6578f4 80%, #3c53f4 100%);
+  /* Tokens shared with the light style; the section components use only these */
+  --card-bg: linear-gradient(180deg, rgb(255 255 255 / 0.055), rgb(255 255 255 / 0.02));
+  --accent: var(--glow);
+  --heading: #fff;
+  --tab-on: rgb(101 120 244 / 0.18);
+  --chip-bg: var(--surface);
+  --bar-us: #8a9bff; /* validated vs --bar-other on #0c1131: ΔE 20, both >= 3:1 */
+  --bar-other: #666c8c;
+  --chart-grid: rgb(255 255 255 / 0.07);
+  --good: #7ee0a8;
 }
 
 *,

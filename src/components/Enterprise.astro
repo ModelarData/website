@@ -1,0 +1,119 @@
+---
+// Pitch-deck "paid features and services" and "ongoing development" (labelled as in development).
+import Icon from './Icon.astro';
+import { company, enterprise } from '../content';
+---
+
+<div class="ent">
+  <div class="col">
+    <h3>{enterprise.paid.title}</h3>
+    <ul class="paid">
+      {
+        enterprise.paid.items.map((i) => (
+          <li>
+            <span class="ico"><Icon name={i.icon} size={18} /></span>
+            <span>{i.text}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+  <div class="col">
+    <h3>{enterprise.roadmap.title} <span class="tag">Roadmap</span></h3>
+    <ul class="road">
+      {enterprise.roadmap.items.map((i) => <li>{i}</li>)}
+    </ul>
+    <p class="lic">
+      <Icon name="scale" size={18} />
+      <span>Open-source core: <a href={`${company.github}/blob/main/LICENSE`} rel="noopener">Apache License 2.0</a></span>
+    </p>
+  </div>
+</div>
+
+<style>
+  .ent {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 16px;
+  }
+  .col {
+    padding: clamp(22px, 3vw, 32px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--card-bg);
+  }
+  h3 {
+    color: var(--heading);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .tag {
+    font: 500 0.7rem var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    padding: 2px 9px;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+  }
+  .paid li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .ico {
+    display: inline-grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--tab-on);
+    color: var(--accent);
+    flex: none;
+  }
+  .road li {
+    position: relative;
+    padding-left: 22px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .road li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 0.5em;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+  }
+  .lic {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 26px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .lic :global(.icon) {
+    color: var(--accent);
+  }
+  @media (max-width: 899px) {
+    .ent {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

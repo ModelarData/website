@@ -1,0 +1,248 @@
+---
+// The pitch deck's three deployment slides (a, b, c) as tabs with a simple edge → cloud → client flow.
+import Icon from './Icon.astro';
+import { deployModes } from '../content';
+
+// What travels and what is stored in each mode (labels from the deck's diagrams).
+const flow: Record<string, { up: string; store: string; down: string; heavy: boolean[]; query?: boolean }> = {
+  without: { up: 'Much raw data (limited by bandwidth)', store: 'Much cloud storage €€€', down: 'Much data', heavy: [true, true, true] },
+  library: { up: 'Much raw data (limited by bandwidth)', store: 'Less cloud storage', down: 'Relevant data as models', heavy: [true, false, false] },
+  full: { up: 'All data as models', store: 'Less cloud storage', down: 'Models or query results', heavy: [false, false, false], query: true },
+};
+---
+
+<div class="dm" data-tabs>
+  <div class="tabs" role="tablist" aria-label="Deployment options">
+    {
+      deployModes.modes.map((m, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`dm-tab-${m.id}`}
+          aria-controls={`dm-panel-${m.id}`}
+          aria-selected={i === 2 ? 'true' : 'false'}
+          tabindex={i === 2 ? 0 : -1}
+        >
+          <span class="letter">{String.fromCharCode(97 + i)}</span>
+          {m.tab}
+        </button>
+      ))
+    }
+  </div>
+
+  {
+    deployModes.modes.map((m, i) => {
+      const f = flow[m.id];
+      return (
+        <div class="panel" role="tabpanel" id={`dm-panel-${m.id}`} aria-labelledby={`dm-tab-${m.id}`} hidden={i !== 2}>
+          <div class="flow">
+            <div class="node">
+              <Icon name="wind" size={26} />
+              <strong>Edge nodes</strong>
+              <small>{m.id === 'full' ? 'compress on the edge' : 'wind and solar farms'}</small>
+            </div>
+            <div class={`link ${f.heavy[0] ? 'link--heavy' : ''}`}>
+              <span>{f.up}</span>
+              {f.query && <span class="back">← Query</span>}
+            </div>
+            <div class={`node ${f.heavy[1] ? 'node--heavy' : 'node--light'}`}>
+              <Icon name="cloud" size={26} />
+              <strong>Cloud</strong>
+              <small>{f.store}</small>
+            </div>
+            <div class={`link ${f.heavy[2] ? 'link--heavy' : ''}`}>
+              <span>{f.down}</span>
+              {f.query && <span class="back">← Query</span>}
+            </div>
+            <div class="node">
+              <Icon name="laptop" size={26} />
+              <strong>Client</strong>
+              <small>{m.id === 'without' ? 'query and tools' : 'with the ModelarDB library'}</small>
+            </div>
+          </div>
+          <div class="copy">
+            <h3>{m.title}</h3>
+            <ul>
+              {m.points.map((p) => (
+                <li>{p}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+    })
+  }
+</div>
+
+<script>
+  import '../scripts/tabs';
+</script>
+
+<style>
+  .dm {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--card-bg);
+    overflow: hidden;
+  }
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  [role='tab'] {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font: 500 0.92rem var(--sans);
+    color: var(--muted);
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+  }
+  [role='tab']:hover {
+    color: var(--heading);
+  }
+  [role='tab'][aria-selected='true'] {
+    color: var(--heading);
+    background: var(--tab-on);
+    border-color: var(--accent);
+  }
+  .letter {
+    font: 600 0.75rem var(--mono);
+    color: var(--accent);
+  }
+  .panel {
+    padding: clamp(20px, 4vw, 36px);
+  }
+  .flow {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr 1.2fr 1fr;
+    align-items: center;
+    gap: 8px;
+  }
+  .node {
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    padding: 18px 10px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--chip-bg);
+    color: var(--accent);
+    text-align: center;
+  }
+  .node strong {
+    color: var(--heading);
+    font-size: 0.98rem;
+  }
+  .node small {
+    color: var(--muted);
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+  .node--heavy {
+    border-color: var(--bar-other);
+  }
+  .node--light {
+    border-color: var(--accent);
+  }
+  .link {
+    position: relative;
+    display: grid;
+    gap: 6px;
+    justify-items: center;
+    text-align: center;
+    font: 0.74rem/1.35 var(--mono);
+    color: var(--muted);
+    padding-bottom: 14px;
+  }
+  .link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 6px;
+    bottom: 0;
+    height: 2px;
+    background: var(--bar-us);
+    border-radius: 2px;
+  }
+  .link::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: -4px;
+    border: 5px solid transparent;
+    border-left: 8px solid var(--bar-us);
+    border-right: 0;
+  }
+  .link--heavy::after {
+    height: 8px;
+    bottom: -3px;
+    background: var(--bar-other);
+  }
+  .link--heavy::before {
+    border-left-color: var(--bar-other);
+    bottom: -6px;
+    border-width: 7px 0 7px 10px;
+  }
+  .back {
+    color: var(--accent);
+  }
+  .copy {
+    margin-top: 32px;
+  }
+  .copy h3 {
+    color: var(--heading);
+    margin-bottom: 10px;
+  }
+  .copy ul {
+    margin: 0;
+    padding-left: 1.1em;
+    color: var(--muted);
+  }
+  .copy li + li {
+    margin-top: 4px;
+  }
+  @media (max-width: 799px) {
+    .flow {
+      grid-template-columns: 1fr;
+    }
+    .link {
+      padding: 4px 0 4px 18px;
+      justify-items: start;
+      text-align: left;
+    }
+    .link::after {
+      left: 6px;
+      right: auto;
+      top: 0;
+      bottom: 6px;
+      width: 2px;
+      height: auto;
+    }
+    .link::before {
+      left: 2px;
+      right: auto;
+      bottom: -2px;
+      border: 5px solid transparent;
+      border-top: 8px solid var(--bar-us);
+      border-bottom: 0;
+    }
+    .link--heavy::after {
+      width: 8px;
+      left: 3px;
+      height: auto;
+      bottom: 6px;
+    }
+    .link--heavy::before {
+      left: 0;
+      border-width: 10px 7px 0 7px;
+      border-color: var(--bar-other) transparent transparent;
+    }
+  }
+</style>

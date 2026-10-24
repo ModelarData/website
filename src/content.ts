@@ -3,6 +3,8 @@
 // Wording is tightened and typos fixed; no new claims, numbers, customers or certifications.
 // REPO: facts and code from ModelarData's own public repository github.com/ModelarData/ModelarDB-RS
 // (README and docs/user/README.md, read 2026-10-24).
+// DECK: facts from the owner's pitch deck reference/PitchModelarDataOctober2026.pdf (October 2026).
+// Investor-only items from the deck (market estimate, grant amounts, planned pilots, VC plans) are deliberately left out.
 
 export const company = {
   name: 'ModelarData',
@@ -26,21 +28,21 @@ export const mail = {
 export const seo = {
   title: 'ModelarDB | Big and fast time-series data for renewable energy',
   description:
-    'ModelarDB stores high-frequency sensor data economically: save up to 99% on storage, query compressed data with SQL, and deploy on edge, cloud and client. Open source.',
+    'ModelarDB compresses high-frequency sensor data with models and a per-value error bound: up to 99% less storage than Apache Parquet, outliers kept, queried with SQL or Python. Open source.',
 };
 
 export const nav = [
-  { href: '#solution', label: 'Solution' },
-  { href: '#case-study', label: 'Case study' },
-  { href: '#get-started', label: 'Get started' },
-  { href: '#collaborators', label: 'Collaborators' },
-  { href: '#about', label: 'About us' },
+  { href: '#solution', label: 'Why ModelarDB' },
+  { href: '#how-it-works', label: 'How it works' },
+  { href: '#benchmarks', label: 'Benchmarks' },
+  { href: '#enterprise', label: 'Enterprise' },
+  { href: '#about', label: 'Team' },
 ];
 
 export const hero = {
   badges: ['Open source', 'Apache-2.0', 'Written in Rust'], // REPO
   h1: { before: 'ModelarDB for', shine: 'big and fast', after: 'time‑series data' }, // non-breaking hyphen
-  sub: 'Manage millisecond sensor data economically and run analytics on both real-time and historical data, from edge to cloud to client.',
+  sub: 'Model-based compression with a per-value error bound: keep all your high-frequency sensor data at up to 99% lower storage cost, keep the outliers, and query it with SQL or Python, from edge to cloud to client.', // DECK
   primary: 'Get started',
   secondary: 'Star on GitHub',
   demo: 'Get a demo',
@@ -88,29 +90,130 @@ export const codeTabs = [
   },
 ];
 
-// Numbers only from the original site.
+// DECK: compression benchmarks slide (10 Hz energy data vs Apache Parquet).
 export const stats = [
-  { value: '99%', label: 'up to, less storage than Apache Parquet' },
-  { value: '100 Hz', label: 'store all sensor data at high frequency, e.g. 10, 50 or 100 Hz' },
-  { value: 'SQL', label: 'queries run directly on compressed data' },
-  { value: 'Edge → Cloud', label: 'collect, compress, transfer, query' },
+  { value: '>100×', label: 'compression with small errors' },
+  { value: '99.96%', label: 'smaller than Apache Parquet at a 10% error bound' },
+  { value: '89.44%', label: 'smaller than Apache Parquet, lossless (0% error bound)' },
+  { value: '100 Hz', label: 'keep all sensor data at high frequency: 10, 50 or 100 Hz' },
 ];
 
 export const builtOn = ['Rust', 'Apache Arrow', 'Arrow Flight', 'Apache DataFusion', 'Apache Parquet']; // REPO
 
+// DECK: "Why ModelarDB" slide.
 export const why = {
   h2: 'Why ModelarDB',
   points: [
     { icon: 'activity', text: 'Manage millisecond sensor data economically' },
     { icon: 'chart-line', text: 'Run analytics on both real-time and historical data' },
     { icon: 'hard-drive', text: 'Save up to 99% on storage' },
-    { icon: 'network', text: 'Deploy flexibly across edge, cloud and client' },
-    { icon: 'code-xml', text: 'Open source, with paid enterprise features and support' },
+    { icon: 'file-code', text: 'Low entry barrier with a simple Python library' },
+    { icon: 'network', text: 'Add a scalable edge–cloud solution for complex scenarios' },
+    { icon: 'code-xml', text: 'Open-source core with paid enterprise features and support' },
   ],
 };
 
+// DECK: "Key idea: model-based compression" slide.
+export const keyIdea = {
+  h2: 'Key idea: model‑based compression', // non-breaking hyphen
+  sub: 'ModelarDB represents time series as models, such as constant and linear functions, within an error bound you choose for every value.', // REPO + DECK
+  panels: [
+    { kind: 'raw', title: 'Raw data points', text: 'Way too much data to feasibly transfer and store.' },
+    { kind: 'agg', title: 'Current solution: aggregates', text: 'No error bound, so outliers are lost.' },
+    { kind: 'model', title: 'ModelarDB: error-bounded models', text: 'A per-value error bound, so outliers are kept.' },
+  ],
+  usp: 'What makes it unique: several compression methods combined and integrated into one complete platform.',
+};
+
+// DECK: slides "a) Without ModelarDB", "b) With ModelarDB Python Library", "c) With Library Plus Full ModelarDB".
+export const deployModes = {
+  h2: 'Start small, scale to the edge',
+  sub: 'Begin with the Python library, then add the full ModelarDB from edge to cloud.',
+  modes: [
+    {
+      id: 'without',
+      tab: 'Without ModelarDB',
+      title: 'All raw data, everywhere',
+      points: [
+        'Edge nodes send all raw data, limited by bandwidth',
+        'Much cloud storage, at a high cost',
+        'Clients pull large amounts of data to query and analyze',
+      ],
+    },
+    {
+      id: 'library',
+      tab: 'With the Python library',
+      title: 'Less cloud storage, models to the client',
+      points: [
+        'Data is stored in the cloud as compressed models: less cloud storage',
+        'Clients with the library receive the relevant data as models',
+        'Nothing changes at the edge',
+      ],
+    },
+    {
+      id: 'full',
+      tab: 'Library plus full ModelarDB',
+      title: 'Models from edge to client',
+      points: [
+        'All data is compressed on the edge and sent as models',
+        'Queries are pushed to the edge and the cloud',
+        'Clients receive relevant data as models or query results',
+      ],
+    },
+  ],
+};
+
+// DECK: "Compression benchmarks" slide. Sizes in GiB, per-value guaranteed error bound in %.
+// The deck does not name the two data sets.
+export const benchmarks = {
+  h2: 'Compression benchmarks',
+  points: [
+    'Very high (more than 100 times) compression with small errors',
+    'Compression does not harm downstream analytics',
+    'Apache Parquet is the industry-standard compressed format',
+  ],
+  sets: [
+    {
+      name: 'Data set 1',
+      rows: [
+        { system: 'Cassandra', bound: '0%', gib: 84.48 },
+        { system: 'Parquet', bound: '0%', gib: 64.42 },
+        { system: 'ORC', bound: '0%', gib: 12.69 },
+        { system: 'InfluxDB', bound: '0%', gib: 4.87 },
+        { system: 'ModelarDB', bound: '0%', gib: 0.98 },
+        { system: 'ModelarDB', bound: '1%', gib: 0.79 },
+        { system: 'ModelarDB', bound: '5%', gib: 0.78 },
+        { system: 'ModelarDB', bound: '10%', gib: 0.75 },
+      ],
+    },
+    {
+      name: 'Data set 2',
+      rows: [
+        { system: 'Cassandra', bound: '0%', gib: 129.37 },
+        { system: 'Parquet', bound: '0%', gib: 92.77 },
+        { system: 'ORC', bound: '0%', gib: 20.54 },
+        { system: 'InfluxDB', bound: '0%', gib: 19.78 },
+        { system: 'ModelarDB', bound: '0%', gib: 12.59 },
+        { system: 'ModelarDB', bound: '1%', gib: 12.1 },
+        { system: 'ModelarDB', bound: '5%', gib: 9.87 },
+        { system: 'ModelarDB', bound: '10%', gib: 8.0 },
+      ],
+    },
+  ],
+  table: {
+    caption: '10 Hz energy data: ModelarDB Python library vs Apache Parquet',
+    rows: [
+      { solution: 'Apache Parquet', size: '3174.4 MiB', reduction: '–' },
+      { solution: 'Library, error bound 0%', size: '335 MiB', reduction: '89.44%' },
+      { solution: 'Library, error bound 1%', size: '13 MiB', reduction: '99.59%' },
+      { solution: 'Library, error bound 5%', size: '2.2 MiB', reduction: '99.93%' },
+      { solution: 'Library, error bound 10%', size: '1.4 MiB', reduction: '99.96%' },
+    ],
+  },
+};
+
 export const caseStudy = {
-  h2: 'Case study: ModelarDB for wind and solar farms',
+  h2: 'Use case: wind and solar farms',
   items: [
     {
       icon: 'layers',
@@ -133,7 +236,7 @@ export const caseStudy = {
       icon: 'lightbulb',
       title: 'Enable insight',
       points: [
-        'Use high-frequency data to detect problems such as yaw misalignment, blade pitch position and PV panel soiling',
+        'Detect problems such as yaw misalignment, blade pitch position and PV panel soiling, directly on compressed data',
       ],
     },
     {
@@ -142,6 +245,33 @@ export const caseStudy = {
       points: ['Save up to 99% on storage compared with Apache Parquet'],
     },
   ],
+};
+
+// DECK: "Paid Features and Services", "Ongoing development" and "Our open source core concept" slides.
+export const enterprise = {
+  h2: 'Open-source core, enterprise ready',
+  sub: 'The ModelarDB core is open source under the Apache License 2.0, which allows usage and further development and gives users trust and stability. ModelarData offers an enterprise edition and services on top.',
+  paid: {
+    title: 'Enterprise edition and services',
+    items: [
+      { icon: 'file-badge', text: 'Enterprise edition under a commercial licence' },
+      { icon: 'shield-check', text: 'Enterprise security: identity and access management (IAM), multi-factor authentication (MFA), role-based access control (RBAC)' },
+      { icon: 'puzzle', text: 'Integration with more tools, e.g. MATLAB, R and Julia' },
+      { icon: 'layout-dashboard', text: 'Graphical user interface to query, administrate and monitor ModelarDB' },
+      { icon: 'package', text: 'Precompiled binaries with frequent updates' },
+      { icon: 'life-buoy', text: 'Support, consultancy, custom development and training' },
+    ],
+  },
+  roadmap: {
+    title: 'In development',
+    items: [
+      'Manager runs on all computers: no single point of failure',
+      'An on-disk copy of the data lets ModelarDB recover from failure',
+      'Only authenticated and authorized access',
+      'Few large files instead of many small files',
+      'Graphical user interface',
+    ],
+  },
 };
 
 export const getStarted = {
@@ -179,15 +309,28 @@ export const developers = {
   ],
 };
 
-// Logos as uploaded to the original site; names as printed on each logo.
+// Logos as uploaded to the original site; names as printed on each logo (Inaccess renamed, per DECK).
 export const collaborators = {
   h2: 'Collaborators',
+  // DECK: "Collaborators" slide.
+  projects: ['ENGIE', 'Power Factors (formerly Inaccess), monitoring of solar farms', 'IBM Research'],
+  advisors: [
+    { name: 'Mikael Frank', role: 'Head of Operational Technology, Ørsted' },
+    { name: 'Emil Hedevang', role: 'Senior Data Scientist, Siemens Gamesa Renewable Energy (now part of Siemens Energy)' },
+  ],
+  // DECK: "Funding" slide; amounts left out.
+  funding: [
+    'EU Horizon 2020 MORE',
+    'Innovation Fund Denmark Innobooster 2023 and 2025',
+    'CET Partnership TwinRE (2026–2029)',
+    'Horizon Europe TwinD (2027–2030)',
+  ],
   logos: [
     { file: 'aau', name: 'Aalborg University' },
     { file: 'athena', name: 'Athena – Information Management Systems Institute' },
     { file: 'darwin', name: "Darwin – ENGIE's software for renewables" },
     { file: 'ibm', name: 'IBM' },
-    { file: 'inaccess', name: 'Inaccess' },
+    { file: 'inaccess', name: 'Power Factors (formerly Inaccess)' },
     { file: 'perception', name: 'Perception Dynamics' },
   ],
 };
@@ -199,14 +342,39 @@ export const about = {
   ],
 };
 
-// Order as on the original site. Christian Schmidt Godiksen has no photo there (placeholder avatar).
-export const team = [
-  { name: 'Harry Xuegang Huang', role: 'Chief Executive Officer', photo: 'harry-huang' },
-  { name: 'Torben Bach Pedersen', role: 'Chief Scientific Officer', photo: 'torben-bach-pedersen' },
-  { name: 'Søren Kejser Jensen', role: 'Chief Technology Officer', photo: 'soren-kejser-jensen' },
-  { name: 'Christian Schmidt Godiksen', role: 'Head Developer', photo: null },
-  { name: 'Christian Thomsen', role: 'Chief Data Officer', photo: 'christian-thomsen' },
-] as const;
+// DECK: "Our Team" slide (order, titles, bios; photos of Harry, Christian S. G. and Torben from the deck).
+export const team: { name: string; role: string; photo: string | null; bio: string }[] = [
+  {
+    name: 'Harry Xuegang Huang, Ph.D.',
+    role: 'Chief Executive Officer',
+    photo: 'harry-huang',
+    bio: '15 years in the Danish IT industry as chief IT architect and developer at Danske Bank, PFA Pension, Nationalbanken, KMD, Energinet, Maersk and Novo Nordisk.',
+  },
+  {
+    name: 'Christian Schmidt Godiksen',
+    role: 'Lead Developer',
+    photo: 'christian-schmidt-godiksen',
+    bio: 'Full-time full-stack software development. M.Sc. in Computer Science, Aalborg University.',
+  },
+  {
+    name: 'Torben Bach Pedersen, Ph.D.',
+    role: 'Chief Scientific Officer',
+    photo: 'torben-bach-pedersen',
+    bio: 'Professor in data management, Aalborg University. ACM Distinguished Scientist, IEEE Distinguished Contributor, Honorary Doctorate (TU Dresden), ATV member.',
+  },
+  {
+    name: 'Christian Thomsen, Ph.D.',
+    role: 'Chief Data Officer',
+    photo: 'christian-thomsen',
+    bio: 'Associate Professor in data management, Aalborg University.',
+  },
+  {
+    name: 'Søren Kejser Jensen, Ph.D.',
+    role: 'Chief Technology Officer',
+    photo: 'soren-kejser-jensen',
+    bio: 'Tenure Track Assistant Professor in data, Aalborg University.',
+  },
+];
 
 export const contact = {
   h2: 'Get a demo',

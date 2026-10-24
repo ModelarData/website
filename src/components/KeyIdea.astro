@@ -1,0 +1,105 @@
+---
+// Three small schematic charts from the pitch deck's "key idea" slide. Illustrations, not data.
+import { keyIdea } from '../content';
+
+// Ten raw points: a rise, one outlier, then a plateau (the deck's shape).
+const raw = [
+  [20, 150], [40, 140], [60, 130], [80, 120], [100, 108], [120, 96], [140, 84], [160, 74], [180, 40], [200, 72], [220, 72], [240, 72],
+];
+---
+
+<div class="ki">
+  {
+    keyIdea.panels.map((p) => (
+      <figure class={`panel panel--${p.kind}`}>
+        <svg viewBox="0 0 260 180" aria-hidden="true">
+          <line x1="12" y1="168" x2="252" y2="168" class="axis" />
+          <line x1="12" y1="10" x2="12" y2="168" class="axis" />
+          {p.kind === 'raw' && raw.map(([x, y]) => <circle cx={x} cy={y} r="5" class="pt" />)}
+          {p.kind === 'agg' && <circle cx="130" cy="96" r="6" class="pt" />}
+          {p.kind === 'model' && (
+            <>
+              <polyline points="20,150 160,74 180,40" class="model" />
+              <line x1="200" y1="72" x2="240" y2="72" class="model" />
+              <circle cx="180" cy="40" r="5" class="kept" />
+            </>
+          )}
+        </svg>
+        <figcaption>
+          <strong>{p.title}</strong>
+          <span>{p.text}</span>
+        </figcaption>
+      </figure>
+    ))
+  }
+</div>
+<p class="usp">{keyIdea.usp}</p>
+
+<style>
+  .ki {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .panel {
+    margin: 0;
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--card-bg);
+  }
+  .panel--model {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent) inset;
+  }
+  svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 16px;
+  }
+  .axis {
+    stroke: var(--line);
+    stroke-width: 1.5;
+  }
+  .pt {
+    fill: var(--bar-other);
+  }
+  .panel--raw .pt:nth-child(11) {
+    fill: var(--accent);
+  }
+  .model {
+    fill: none;
+    stroke: var(--bar-us);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .kept {
+    fill: var(--bar-us);
+    stroke: var(--heading);
+    stroke-width: 2;
+  }
+  figcaption {
+    display: grid;
+    gap: 4px;
+  }
+  figcaption strong {
+    color: var(--heading);
+    font-size: 1.05rem;
+  }
+  figcaption span {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .usp {
+    margin: 28px 0 0;
+    font-weight: 600;
+    color: var(--heading);
+  }
+  @media (max-width: 799px) {
+    .ki {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

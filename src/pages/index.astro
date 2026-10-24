@@ -4,16 +4,25 @@ import type { ImageMetadata } from 'astro';
 import Layout from '../layouts/Layout.astro';
 import Icon from '../components/Icon.astro';
 import CodeTabs from '../components/CodeTabs.astro';
+import KeyIdea from '../components/KeyIdea.astro';
+import DeployModes from '../components/DeployModes.astro';
+import Benchmarks from '../components/Benchmarks.astro';
+import Enterprise from '../components/Enterprise.astro';
+import Backers from '../components/Backers.astro';
 import {
   about,
+  benchmarks,
   builtOn,
   caseStudy,
   collaborators,
   company,
   contact,
+  deployModes,
   developers,
+  enterprise,
   getStarted,
   hero,
+  keyIdea,
   mail,
   seo,
   stats,
@@ -144,8 +153,43 @@ const jsonLd = {
     </div>
   </section>
 
+  <!-- Key idea -->
+  <section id="key-idea" class="section section--glow">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Key idea</span>
+        <h2>{keyIdea.h2}</h2>
+        <p class="lead">{keyIdea.sub}</p>
+      </div>
+      <KeyIdea />
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">How it works</span>
+        <h2>{deployModes.h2}</h2>
+        <p class="lead">{deployModes.sub}</p>
+      </div>
+      <DeployModes />
+    </div>
+  </section>
+
+  <!-- Benchmarks -->
+  <section id="benchmarks" class="section section--glow">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Benchmarks</span>
+        <h2>{benchmarks.h2}</h2>
+      </div>
+      <Benchmarks />
+    </div>
+  </section>
+
   <!-- Developer features (bento) -->
-  <section id="developers" class="section section--glow">
+  <section id="developers" class="section">
     <div class="container">
       <div class="section-head">
         <span class="kicker">For developers</span>
@@ -292,8 +336,20 @@ const jsonLd = {
     </div>
   </section>
 
+  <!-- Enterprise -->
+  <section id="enterprise" class="section section--glow">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Enterprise</span>
+        <h2>{enterprise.h2}</h2>
+        <p class="lead">{enterprise.sub}</p>
+      </div>
+      <Enterprise />
+    </div>
+  </section>
+
   <!-- Get started -->
-  <section id="get-started" class="section section--glow">
+  <section id="get-started" class="section">
     <div class="container start">
       <div>
         <span class="kicker">Get started</span>
@@ -328,7 +384,7 @@ const jsonLd = {
   </section>
 
   <!-- Collaborators -->
-  <section id="collaborators" class="section">
+  <section id="collaborators" class="section section--glow">
     <div class="container">
       <div class="section-head">
         <span class="kicker">Partners</span>
@@ -343,11 +399,12 @@ const jsonLd = {
           ))
         }
       </ul>
+      <Backers />
     </div>
   </section>
 
   <!-- About and team -->
-  <section id="about" class="section section--glow">
+  <section id="about" class="section">
     <div class="container">
       <div class="section-head">
         <span class="kicker">About us</span>
@@ -367,6 +424,7 @@ const jsonLd = {
               )}
               <strong>{p.name}</strong>
               <span class="role">{p.role}</span>
+              <p class="bio">{p.bio}</p>
             </li>
           ))
         }
@@ -531,7 +589,7 @@ const jsonLd = {
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 14px;
   }
   .why li {
@@ -539,7 +597,7 @@ const jsonLd = {
     flex-direction: column;
     gap: 14px;
     padding: 22px;
-    min-height: 210px;
+    min-height: 180px;
     transition:
       border-color 0.2s,
       transform 0.2s;
@@ -856,6 +914,12 @@ const jsonLd = {
   }
   .role {
     font: 0.78rem var(--mono);
+    color: var(--cyan);
+  }
+  .bio {
+    margin: 10px 0 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
     color: var(--muted);
   }
 
@@ -893,7 +957,7 @@ const jsonLd = {
       grid-template-columns: repeat(3, 1fr);
     }
     .team {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
     }
     .logos {
       grid-template-columns: repeat(3, 1fr);
@@ -932,15 +996,14 @@ const jsonLd = {
   }
   @media (max-width: 599px) {
     .why,
-    .team,
     .logos {
       grid-template-columns: repeat(2, 1fr);
     }
+    .team {
+      grid-template-columns: 1fr;
+    }
     .why li {
       min-height: 0;
-    }
-    .why li:last-child {
-      grid-column: span 2;
     }
     .stats > div {
       padding: 24px 12px;

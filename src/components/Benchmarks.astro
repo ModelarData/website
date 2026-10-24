@@ -1,0 +1,215 @@
+---
+// Pitch-deck compression benchmarks: data set size per system (linear scale, GiB) and the 10 Hz table.
+// ModelarDB bars wear --bar-us, every other system --bar-other; every bar is direct-labelled.
+import { benchmarks } from '../content';
+
+const fmt = (n: number) => n.toFixed(2);
+---
+
+<div class="bm">
+  <div class="charts">
+    {
+      benchmarks.sets.map((set) => {
+        const max = Math.max(...set.rows.map((r) => r.gib));
+        return (
+          <figure class="chart">
+            <figcaption>
+              <strong>{set.name}</strong>
+              <span>Data set size (GiB) by per-value guaranteed error bound. Shorter is better.</span>
+            </figcaption>
+            <ul>
+              {set.rows.map((r) => {
+                const us = r.system === 'ModelarDB';
+                return (
+                  <li class={us ? 'us' : ''} title={`${r.system}, ${r.bound} error bound: ${fmt(r.gib)} GiB`}>
+                    <span class="name">
+                      {r.system} <small>{r.bound}</small>
+                    </span>
+                    <span class="track">
+                      <span class="bar" style={`width: max(3px, ${(r.gib / max) * 100}%)`} />
+                    </span>
+                    <span class="val">{fmt(r.gib)}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </figure>
+        );
+      })
+    }
+  </div>
+
+  <div class="side">
+    <ul class="points">
+      {benchmarks.points.map((p) => <li>{p}</li>)}
+    </ul>
+    <table>
+      <caption>{benchmarks.table.caption}</caption>
+      <thead>
+        <tr><th scope="col">Solution</th><th scope="col">Size</th><th scope="col">Reduction</th></tr>
+      </thead>
+      <tbody>
+        {
+          benchmarks.table.rows.map((r) => (
+            <tr>
+              <th scope="row">{r.solution}</th>
+              <td>{r.size}</td>
+              <td class="red">{r.reduction}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .bm {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .charts {
+    display: grid;
+    gap: 16px;
+  }
+  .chart,
+  table {
+    margin: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--card-bg);
+  }
+  .chart {
+    padding: 22px;
+  }
+  figcaption {
+    display: grid;
+    gap: 2px;
+    margin-bottom: 14px;
+  }
+  figcaption strong {
+    color: var(--heading);
+  }
+  figcaption span {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .chart ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+  }
+  .chart li {
+    display: grid;
+    grid-template-columns: 128px 1fr 52px;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+  }
+  .name {
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .name small {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+  }
+  .us .name {
+    color: var(--heading);
+    font-weight: 600;
+  }
+  .track {
+    height: 14px;
+    border-left: 1px solid var(--chart-grid);
+  }
+  .bar {
+    display: block;
+    height: 100%;
+    background: var(--bar-other);
+    border-radius: 0 4px 4px 0;
+  }
+  .us .bar {
+    background: var(--bar-us);
+  }
+  .val {
+    font: 0.8rem var(--mono);
+    color: var(--muted);
+    text-align: right;
+  }
+  .us .val {
+    color: var(--heading);
+  }
+  .points {
+    margin: 0 0 20px;
+    padding-left: 1.1em;
+    color: var(--muted);
+  }
+  .points li + li {
+    margin-top: 6px;
+  }
+  .points li::marker {
+    color: var(--accent);
+  }
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    font-size: 0.9rem;
+  }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-weight: 600;
+    color: var(--heading);
+    padding: 0 0 10px;
+  }
+  th,
+  td {
+    padding: 11px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+  tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+  thead th {
+    font: 600 0.75rem var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+  }
+  tbody th {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  td {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  td.red {
+    color: var(--heading);
+    font-weight: 600;
+  }
+  @media (max-width: 899px) {
+    .bm {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 479px) {
+    .chart li {
+      grid-template-columns: 104px 1fr 44px;
+      gap: 8px;
+    }
+    th,
+    td {
+      padding: 10px;
+    }
+  }
+</style>
