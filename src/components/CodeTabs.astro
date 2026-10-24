@@ -1,0 +1,220 @@
+---
+// Tabbed code window. Highlighting is done at build time with a few regexes; no client-side library.
+import Icon from './Icon.astro';
+import { codeTabs } from '../content';
+
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const keywords =
+  /\b(CREATE|TIME|SERIES|TABLE|SELECT|FROM|LIMIT|TIMESTAMP|TAG|FIELD|import|docker-compose|git|cd)\b/g;
+const paint = (line: { k: string; t: string }) => {
+  if (line.k === 'comment') return `<span class="c">${esc(line.t)}</span>`;
+  const html = esc(line.t)
+    .replace(/(\d+(?:\.\d+)?%?)/g, '<span class="n">$1</span>')
+    .replace(keywords, '<span class="k">$1</span>')
+    .replace(/(\.\w+)(?=\()/g, '<span class="f">$1</span>');
+  return line.k === 'prompt' ? `<span class="p" aria-hidden="true">$ </span>${html}` : html;
+};
+// What the copy button puts on the clipboard: the code without prompts and comments.
+const plain = (lines: { k: string; t: string }[]) =>
+  lines
+    .filter((l) => l.k !== 'comment')
+    .map((l) => l.t)
+    .join('\n')
+    .trim();
+---
+
+<div class="window" data-tabs>
+  <div class="bar">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <div class="tabs" role="tablist" aria-label="Code examples">
+      {
+        codeTabs.map((t, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`tab-${t.id}`}
+            aria-controls={`panel-${t.id}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+          >
+            {t.label}
+          </button>
+        ))
+      }
+    </div>
+    <button type="button" class="copy" data-copy aria-label="Copy code">
+      <Icon name="copy" size={15} class="i-copy" /><Icon name="check" size={15} class="i-done" />
+    </button>
+  </div>
+  {
+    codeTabs.map((t, i) => (
+      <div
+        class="panel"
+        role="tabpanel"
+        id={`panel-${t.id}`}
+        aria-labelledby={`tab-${t.id}`}
+        data-code={plain(t.lines)}
+        hidden={i !== 0}
+      >
+        <span class="file">{t.file}</span>
+        <pre><code set:html={t.lines.map(paint).join('\n')} /></pre>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role=tab]')];
+    const select = (tab: HTMLButtonElement) => {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        root.querySelector<HTMLElement>(`#${t.getAttribute('aria-controls')}`)!.hidden = !on;
+      });
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => select(t));
+      t.addEventListener('keydown', (e) => {
+        const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!step) return;
+        const next = tabs[(i + step + tabs.length) % tabs.length];
+        select(next);
+        next.focus();
+      });
+    });
+    const copy = root.querySelector<HTMLButtonElement>('[data-copy]');
+    copy?.addEventListener('click', async () => {
+      const panel = root.querySelector<HTMLElement>('[role=tabpanel]:not([hidden])');
+      try {
+        await navigator.clipboard.writeText(panel?.dataset.code ?? '');
+        copy.classList.add('is-done');
+        setTimeout(() => copy.classList.remove('is-done'), 1600);
+      } catch {
+        /* clipboard blocked: nothing to do */
+      }
+    });
+  });
+</script>
+
+<style>
+  .window {
+    position: relative;
+    border-radius: 14px;
+    background: rgb(7 11 36 / 0.85);
+    border: 1px solid var(--line-2);
+    box-shadow:
+      0 0 0 1px rgb(101 120 244 / 0.15),
+      0 30px 80px -20px rgb(60 83 244 / 0.55),
+      inset 0 1px 0 rgb(255 255 255 / 0.08);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 12px 10px 16px;
+    border-bottom: 1px solid var(--line);
+    background: rgb(255 255 255 / 0.025);
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dots i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.16);
+  }
+  .tabs {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+  }
+  [role='tab'] {
+    font: 500 0.82rem var(--mono);
+    color: var(--muted);
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    padding: 5px 11px;
+    cursor: pointer;
+  }
+  [role='tab']:hover {
+    color: #fff;
+  }
+  [role='tab'][aria-selected='true'] {
+    color: #fff;
+    background: rgb(101 120 244 / 0.18);
+    border-color: rgb(139 155 255 / 0.35);
+  }
+  .copy {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    cursor: pointer;
+  }
+  .copy:hover {
+    color: #fff;
+    border-color: var(--line-2);
+  }
+  .copy :global(.i-done),
+  .copy.is-done :global(.i-copy) {
+    display: none;
+  }
+  .copy.is-done :global(.i-done) {
+    display: block;
+    color: #7ee0a8;
+  }
+  .panel {
+    position: relative;
+    padding: 18px 20px 22px;
+  }
+  .file {
+    display: block;
+    font: 0.72rem var(--mono);
+    color: rgb(163 171 214 / 0.6);
+    margin-bottom: 10px;
+  }
+  pre {
+    margin: 0;
+    overflow-x: auto;
+    font-size: 0.86rem;
+    line-height: 1.75;
+    color: #dfe3ff;
+  }
+  @media (max-width: 599px) {
+    pre {
+      font-size: 0.76rem;
+    }
+    .panel {
+      padding: 14px 14px 18px;
+    }
+  }
+  pre :global(.k) {
+    color: #8b9bff;
+    font-weight: 600;
+  }
+  pre :global(.n) {
+    color: #7ee0ff;
+  }
+  pre :global(.f) {
+    color: #ffd166;
+  }
+  pre :global(.c) {
+    color: #6e77a8;
+    font-style: italic;
+  }
+  pre :global(.p) {
+    color: #6578f4;
+    user-select: none;
+  }
+</style>

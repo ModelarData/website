@@ -1,6 +1,8 @@
 // All copy for modelardata.com (English only).
 // Facts come only from the original Wix site (copied 2026-10-22, commit 4f84d3f).
 // Wording is tightened and typos fixed; no new claims, numbers, customers or certifications.
+// REPO: facts and code from ModelarData's own public repository github.com/ModelarData/ModelarDB-RS
+// (README and docs/user/README.md, read 2026-10-24).
 
 export const company = {
   name: 'ModelarData',
@@ -13,6 +15,7 @@ export const company = {
   github: 'https://github.com/ModelarData/ModelarDB-RS',
   docs: 'https://github.com/ModelarData/ModelarDB-RS#installation',
   cloneUrl: 'https://github.com/ModelarData/ModelarDB-RS.git',
+  license: 'Apache-2.0', // REPO
 } as const;
 
 export const mail = {
@@ -35,12 +38,65 @@ export const nav = [
 ];
 
 export const hero = {
-  kicker: 'Open-source time-series database',
-  h1: 'ModelarDB for big and fast time-series data',
-  sub: 'Manage millisecond sensor data economically and run analytics on both real-time and historical data.',
-  primary: 'Get a demo',
-  secondary: 'View on GitHub',
+  badges: ['Open source', 'Apache-2.0', 'Written in Rust'], // REPO
+  h1: { before: 'ModelarDB for', shine: 'big and fast', after: 'time‑series data' }, // non-breaking hyphen
+  sub: 'Manage millisecond sensor data economically and run analytics on both real-time and historical data, from edge to cloud to client.',
+  primary: 'Get started',
+  secondary: 'Star on GitHub',
+  demo: 'Get a demo',
 };
+
+// REPO: snippets from docs/user/README.md (shortened, not changed).
+export const codeTabs = [
+  {
+    id: 'sql',
+    label: 'SQL',
+    file: 'modelardb',
+    lines: [
+      { k: 'comment', t: '-- Lossless by default, or set a per-value error bound' },
+      { k: 'code', t: 'CREATE TIME SERIES TABLE wind_turbine(' },
+      { k: 'code', t: '  timestamp TIMESTAMP, wind_turbine TAG,' },
+      { k: 'code', t: '  wind_direction FIELD, wind_speed FIELD(1.0%))' },
+      { k: 'blank', t: '' },
+      { k: 'code', t: 'SELECT * FROM wind_turbine LIMIT 5' },
+    ],
+  },
+  {
+    id: 'python',
+    label: 'Python',
+    file: 'example.py',
+    lines: [
+      { k: 'code', t: 'import modelardb' },
+      { k: 'blank', t: '' },
+      { k: 'comment', t: '# A data folder on a local disk' },
+      { k: 'code', t: 'local_data_folder = modelardb.open_local(data_folder_path)' },
+      { k: 'blank', t: '' },
+      { k: 'comment', t: '# Or a modelardbd instance' },
+      { k: 'code', t: 'modelardb_node = modelardb.connect(url)' },
+    ],
+  },
+  {
+    id: 'docker',
+    label: 'Docker',
+    file: 'terminal',
+    lines: [
+      { k: 'prompt', t: 'git clone https://github.com/ModelarData/ModelarDB-RS' },
+      { k: 'prompt', t: 'cd ModelarDB-RS' },
+      { k: 'prompt', t: 'docker-compose -p modelardb-single -f docker-compose-single.yml up' },
+      { k: 'comment', t: '# Single edge node on port 9999' },
+    ],
+  },
+];
+
+// Numbers only from the original site.
+export const stats = [
+  { value: '99%', label: 'up to, less storage than Apache Parquet' },
+  { value: '100 Hz', label: 'store all sensor data at high frequency, e.g. 10, 50 or 100 Hz' },
+  { value: 'SQL', label: 'queries run directly on compressed data' },
+  { value: 'Edge → Cloud', label: 'collect, compress, transfer, query' },
+];
+
+export const builtOn = ['Rust', 'Apache Arrow', 'Arrow Flight', 'Apache DataFusion', 'Apache Parquet']; // REPO
 
 export const why = {
   h2: 'Why ModelarDB',
@@ -90,7 +146,7 @@ export const caseStudy = {
 
 export const getStarted = {
   h2: 'Get started',
-  sub: 'ModelarDB is open source. Clone the repository and follow the installation guide.',
+  sub: 'ModelarDB is open source under the Apache-2.0 licence. Clone the repository, build with Cargo or start a single edge node with Docker, and follow the installation guide.',
   links: [
     { icon: 'git-branch', label: 'GitHub', href: company.github },
     { icon: 'book-open', label: 'Documentation', href: company.docs },

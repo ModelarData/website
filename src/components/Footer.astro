@@ -25,9 +25,10 @@ const year = new Date().getFullYear();
 
 <style>
   .footer {
-    background: var(--deep);
-    color: #c9cff5;
-    padding-block: 28px;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    padding-block: 32px;
     font-size: 0.92rem;
   }
   .row {
@@ -47,11 +48,14 @@ const year = new Date().getFullYear();
     color: #fff;
     font-weight: 700;
   }
+  .brand :global(svg) {
+    color: var(--glow);
+  }
   .links {
     display: flex;
     gap: 20px;
   }
   a {
-    color: #fff;
+    color: var(--ink);
   }
 </style>

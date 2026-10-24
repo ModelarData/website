@@ -7,7 +7,7 @@ import { company, mail, nav } from '../content';
 <header class="header">
   <div class="container bar">
     <a class="brand" href="/#top" aria-label={`${company.name} – home`}>
-      <Logo size={34} class="mark" />
+      <Logo size={30} class="mark" />
       <span class="name">{company.name}</span>
     </a>
 
@@ -19,9 +19,12 @@ import { company, mail, nav } from '../content';
       <ul>
         {nav.map((n) => <li><a href={`/${n.href}`}>{n.label}</a></li>)}
       </ul>
-      <a class="btn btn--primary cta" href={mail.demo}>
-        <Icon name="mail" size={18} />Contact
-      </a>
+      <div class="actions">
+        <a class="gh" href={company.github} rel="noopener">
+          <Icon name="star" size={16} />GitHub
+        </a>
+        <a class="btn btn--primary cta" href={mail.demo}>Get a demo</a>
+      </div>
     </nav>
   </div>
 </header>
@@ -47,8 +50,8 @@ import { company, mail, nav } from '../content';
     position: sticky;
     top: 0;
     z-index: 50;
-    background: rgb(255 255 255 / 0.96);
-    backdrop-filter: blur(8px);
+    background: rgb(6 10 34 / 0.72);
+    backdrop-filter: blur(14px) saturate(140%);
     border-bottom: 1px solid var(--line);
   }
   .bar {
@@ -56,20 +59,20 @@ import { company, mail, nav } from '../content';
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    min-height: 68px;
+    min-height: 66px;
   }
   .brand {
     display: flex;
     align-items: center;
     gap: 10px;
     text-decoration: none;
-    color: var(--navy);
+    color: var(--glow);
   }
   .name {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 700;
     letter-spacing: -0.02em;
-    color: var(--deep);
+    color: #fff;
   }
   .nav {
     display: flex;
@@ -78,27 +81,50 @@ import { company, mail, nav } from '../content';
   }
   .nav ul {
     display: flex;
-    gap: 24px;
+    gap: 26px;
     list-style: none;
     margin: 0;
     padding: 0;
   }
   .nav ul a {
-    color: var(--ink);
+    color: var(--muted);
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.95rem;
-    padding-block: 6px;
-    border-bottom: 2px solid transparent;
+    font-size: 0.93rem;
+    transition: color 0.15s;
   }
   .nav ul a:hover {
-    color: var(--primary);
-    border-bottom-color: var(--primary);
+    color: #fff;
+  }
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .gh {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 6px 14px;
+    border-radius: 9px;
+    border: 1px solid var(--line-2);
+    background: var(--surface);
+    color: var(--ink);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+  }
+  .gh:hover {
+    border-color: rgb(255 255 255 / 0.3);
+  }
+  .gh :global(.icon) {
+    color: #ffd166;
   }
   .cta {
-    min-height: 40px;
-    padding: 8px 16px;
-    font-size: 0.95rem;
+    min-height: 38px;
+    padding: 6px 16px;
+    font-size: 0.92rem;
   }
   .toggle {
     display: none;
@@ -107,9 +133,9 @@ import { company, mail, nav } from '../content';
     font: inherit;
     font-weight: 600;
     color: var(--ink);
-    background: none;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--line-2);
+    border-radius: 9px;
     padding: 8px 14px;
     min-height: 44px;
   }
@@ -133,21 +159,21 @@ import { company, mail, nav } from '../content';
   .bars::after {
     top: 6px;
   }
-  @media (max-width: 899px) {
+  @media (max-width: 939px) {
     .toggle {
       display: inline-flex;
     }
     .nav {
       display: none;
       position: absolute;
-      inset: 68px 0 auto 0;
+      inset: 66px 0 auto 0;
       flex-direction: column;
       align-items: stretch;
       gap: 16px;
       padding: 8px 16px 24px;
-      background: var(--paper);
+      background: var(--bg-2);
       border-bottom: 1px solid var(--line);
-      box-shadow: var(--shadow);
+      box-shadow: 0 30px 60px rgb(0 0 0 / 0.5);
     }
     .nav.is-open {
       display: flex;
@@ -159,9 +185,12 @@ import { company, mail, nav } from '../content';
     .nav ul a {
       display: block;
       padding: 14px 0;
+      font-size: 1rem;
+      color: var(--ink);
       border-bottom: 1px solid var(--line);
     }
-    .cta {
+    .actions > * {
+      flex: 1;
       justify-content: center;
       min-height: 44px;
     }
