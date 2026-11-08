@@ -3,8 +3,9 @@
 // Wording is tightened and typos fixed; no new claims, numbers, customers or certifications.
 // REPO: facts and code from ModelarData's own public repository github.com/ModelarData/ModelarDB-RS
 // (README and docs/user/README.md, read 2026-10-24).
-// DECK: facts from the owner's pitch deck reference/PitchModelarDataOctober2026.pdf (October 2026).
-// Investor-only items from the deck (market estimate, grant amounts, planned pilots, VC plans) are deliberately left out.
+// DECK: facts from ModelarData's own presentation (October 2026).
+
+import { withBase } from './lib/url';
 
 export const company = {
   name: 'ModelarData',
@@ -32,11 +33,11 @@ export const seo = {
 };
 
 export const nav = [
-  { href: '/#solution', label: 'Solution' },
-  { href: '/#case-study', label: 'Case study' },
-  { href: '/#get-started', label: 'Get started' },
-  { href: '/#about', label: 'About us' },
-  { href: '/blog/', label: 'Blog' },
+  { href: withBase('/#solution'), label: 'Solution' },
+  { href: withBase('/#case-study'), label: 'Case study' },
+  { href: withBase('/#get-started'), label: 'Get started' },
+  { href: withBase('/#about'), label: 'About us' },
+  { href: withBase('/blog/'), label: 'Blog' },
 ];
 
 export const hero = {

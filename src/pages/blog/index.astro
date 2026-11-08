@@ -3,6 +3,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Icon from '../../components/Icon.astro';
 import { article, company } from '../../content';
+import { withBase } from '../../lib/url';
 
 const posts = [article];
 ---
@@ -18,7 +19,7 @@ const posts = [article];
       {
         posts.map((p) => (
           <li>
-            <a href={`/blog/${p.slug}/`}>
+            <a href={withBase(`/blog/${p.slug}/`)}>
               <time datetime={p.date}>{p.dateLabel}</time>
               <strong>{p.title}</strong>
               <span class="desc">{p.description}</span>

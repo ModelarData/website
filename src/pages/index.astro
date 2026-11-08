@@ -22,6 +22,7 @@ import {
   team,
   why,
 } from '../content';
+import { withBase } from '../lib/url';
 
 const partnerImages = import.meta.glob<{ default: ImageMetadata }>('../assets/partners/*.png', { eager: true });
 const teamImages = import.meta.glob<{ default: ImageMetadata }>('../assets/team/*.jpg', { eager: true });
@@ -232,7 +233,7 @@ const jsonLd = {
   <!-- Blog teaser -->
   <section class="teaser-wrap" aria-label={blogTeaser.kicker}>
     <div class="container">
-      <a class="card teaser" href={`/blog/${article.slug}/`}>
+      <a class="card teaser" href={withBase(`/blog/${article.slug}/`)}>
         <span class="kicker">{blogTeaser.kicker}</span>
         <strong>{blogTeaser.title}</strong>
         <span class="teaser-text">{blogTeaser.text}</span>

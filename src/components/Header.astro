@@ -2,11 +2,12 @@
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
 import { company, mail, nav } from '../content';
+import { withBase } from '../lib/url';
 ---
 
 <header class="header">
   <div class="container bar">
-    <a class="brand" href="/#top" aria-label={`${company.name} – home`}>
+    <a class="brand" href={withBase('/#top')} aria-label={`${company.name} – home`}>
       <Logo size={30} class="mark" />
       <span class="name">{company.name}</span>
     </a>

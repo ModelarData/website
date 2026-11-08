@@ -1,28 +1,36 @@
-# modelardata.com — ModelarData ApS (Astro 5, English)
+# modelardata.com
 
-Rebuilt 2026-10-22/24 from the Wix site at the owner's request: same content and colours, SEO, and a dark, code-first developer-tool look (owner feedback 2026-10-24, `temp/2026-10-24_0930_modelardata-dark-devtool-style.md`).
-Facts marked REPO in `src/content.ts` (licence, Rust, Arrow/DataFusion/Parquet, code snippets) come from ModelarData's public repository github.com/ModelarData/ModelarDB-RS.
-The one-to-one static copy of the Wix site is in git history (commit 4f84d3f, PR #3).
-Plan record: `temp/2026-10-22_0925_modelardata-redesign.md`.
+Website of ModelarData ApS, built with [Astro](https://astro.build) and hosted on GitHub Pages.
 
 | | |
 | --- | --- |
-| DNS today | Wix (`ns0.wixdns.net`, `ns1.wixdns.net`), not Cloudflare |
-| E-mail (MX) | Microsoft 365 (`modelardata-com.mail.protection.outlook.com`) — do not touch |
-| Azure | `rg-web-modelardata` / `swa-modelardata` (Free, West Europe), delete lock |
-| Preview URL | https://white-desert-030260a03.4.azurestaticapps.net |
-| Deploy | `.github/workflows/deploy-modelardata.yml`, secret `AZURE_SWA_TOKEN_MODELARDATA` |
+| Hosting | GitHub Pages, deployed by `.github/workflows/deploy.yml` on every push to `main` |
+| Preview | https://modelardata.github.io/website/ (until the custom domain is set) |
+| DNS | Wix (`ns0.wixdns.net`, `ns1.wixdns.net`) |
+| E-mail (MX) | Microsoft 365 — do not change these records |
 
-- All copy is in `src/content.ts`. Facts come only from the original site; wording tightened and typos fixed, no new claims.
-- Team photos and collaborator logos in `src/assets/` are the owner's uploads from the Wix site, served as responsive WebP. The logo (`src/components/Logo.astro`) is the original line-chart mark.
-- Wix stock photos (wind turbines, case-study photos, wave background) are not used: they are licensed for Wix sites only. The hero and case-study pictures are drawn SVG illustrations with no data in them.
-- No form: the Wix form only works on Wix. "Get a demo" and "Contact" open an e-mail to hello@modelardata.com (demo with a pre-filled subject).
-- SEO: title, meta description, canonical, Open Graph image (`public/og.png`), `Organization` + `SoftwareApplication` JSON-LD, sitemap, robots. Inter and JetBrains Mono are self-hosted; no cookies or third-party scripts.
-- `/mobile` (the copy's mobile page) redirects to `/`. Copyright "© 2023–<year>" is kept current in the browser.
+## Working on the site
 
-Commands: `npm run dev`, `npm run build`, `npm run check`.
+```sh
+npm ci
+npm run dev     # local preview at http://localhost:4321
+npm run build   # static site in dist/
+npm run check   # type check
+```
 
-## Before DNS cutover (owner approval required)
+- All copy is in `src/content.ts`. Facts marked REPO come from [ModelarDB-RS](https://github.com/ModelarData/ModelarDB-RS).
+- Team photos and collaborator logos in `src/assets/` are served as responsive WebP. The logo is `src/components/Logo.astro`.
+- There is no form: "Get a demo" and "Contact" open an e-mail to hello@modelardata.com.
+- SEO: title, description, canonical, Open Graph image (`public/og.png`), JSON-LD, sitemap and robots. Fonts are self-hosted; no cookies or third-party scripts.
+- Links to pages on the site use `withBase()` from `src/lib/url.ts`, so the site works both under `/website/` on github.io and at the root of the custom domain.
 
-- Team sign-off on the preview.
-- DNS is at Wix: either move the domain's DNS to Cloudflare (like the other sites) or edit records at Wix. E-mail is Microsoft 365: copy MX, SPF, autodiscover and any verification records exactly — `hello@modelardata.com` must keep working.
+## GitHub Pages notes
+
+- Pages cannot send HTTP headers, so the Content-Security-Policy is a `<meta>` tag in `src/layouts/Layout.astro`. HSTS and `frame-ancestors` are not available.
+- `/mobile` (the old Wix mobile page) is a redirect page; unknown paths show `src/pages/404.astro`.
+
+## Custom domain
+
+1. In Settings → Pages, set the custom domain to `www.modelardata.com`.
+2. At Wix DNS: `www` CNAME → `modelardata.github.io`; apex A records → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`. Keep the Microsoft 365 records (MX, SPF, autodiscover, verification) unchanged.
+3. When the certificate is issued, enable "Enforce HTTPS".

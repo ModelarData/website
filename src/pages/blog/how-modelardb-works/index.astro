@@ -8,6 +8,7 @@ import DeployModes from '../../../components/DeployModes.astro';
 import Benchmarks from '../../../components/Benchmarks.astro';
 import Enterprise from '../../../components/Enterprise.astro';
 import { article, benchmarks, company, deployModes, enterprise, keyIdea, mail } from '../../../content';
+import { withBase } from '../../../lib/url';
 
 const url = `${company.url}/blog/${article.slug}/`;
 const jsonLd = {
@@ -26,7 +27,7 @@ const jsonLd = {
 <Layout title={`${article.title} | ${company.name}`} description={article.description} jsonLd={jsonLd}>
   <article>
     <header class="container head">
-      <a class="back" href="/blog/"><Icon name="arrow-left" size={16} />Blog</a>
+      <a class="back" href={withBase('/blog/')}><Icon name="arrow-left" size={16} />Blog</a>
       <span class="kicker">{article.dateLabel}</span>
       <h1>{article.title}</h1>
       <p class="lead">{article.intro}</p>
